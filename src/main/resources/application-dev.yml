@@ -1,0 +1,8 @@
+spring:
+  data:
+    jdbc:
+      dialect: h2
+  datasource:
+    url: "jdbc:h2:mem:default"
+    username: "sa"
+    password: "sa"
