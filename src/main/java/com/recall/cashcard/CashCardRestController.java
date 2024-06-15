@@ -49,14 +49,13 @@ public class CashCardRestController {
 
     @GetMapping
     private ResponseEntity<Iterable<CashCard>> findAll(Pageable pageable) {
-//        Page<CashCard> page = cardRepository.findAll(
-//                PageRequest.of(
-//                        pageable.getPageNumber(),
-//                        pageable.getPageSize(),
-//                        pageable.getSortOr(Sort.by(Sort.Direction.DESC, "amount"))
-//                )
-//        );
-        return ResponseEntity.ok(cardRepository.findAll());
+        Page<CashCard> page = cardRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize()
+                )
+        );
+        return ResponseEntity.ok(page.getContent());
     }
 
 }
