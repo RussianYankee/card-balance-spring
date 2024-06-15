@@ -1,5 +1,9 @@
 package com.recall.cashcard;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,4 +46,17 @@ public class CashCardRestController {
                 .toUri();
         return ResponseEntity.created(locationOfNewCard).build();
     }
+
+    @GetMapping
+    private ResponseEntity<Iterable<CashCard>> findAll(Pageable pageable) {
+//        Page<CashCard> page = cardRepository.findAll(
+//                PageRequest.of(
+//                        pageable.getPageNumber(),
+//                        pageable.getPageSize(),
+//                        pageable.getSortOr(Sort.by(Sort.Direction.DESC, "amount"))
+//                )
+//        );
+        return ResponseEntity.ok(cardRepository.findAll());
+    }
+
 }
