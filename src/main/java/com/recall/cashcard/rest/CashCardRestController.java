@@ -24,7 +24,7 @@ public class CashCardRestController {
 
     @GetMapping("/{requestedID}")
     private ResponseEntity<CashCard> findById(@PathVariable Long requestedID, Principal principal) {
-        CashCard card = cardRepository.findByIdAndOwner(requestedID, principal.getName());
+        CashCard card = cardRepository.findByIdAndOwnerAndActiveIsTrue(requestedID, principal.getName());
         if (card != null) {
             return ResponseEntity.ok(card);
         }
@@ -39,7 +39,8 @@ public class CashCardRestController {
         CashCard savedCard = cardRepository.save(new CashCard(
                 null,
                 newCard.amount(),
-                principal.getName())
+                principal.getName(),
+                true)
         );
 
         URI locationOfNewCard = ucb
@@ -66,8 +67,8 @@ public class CashCardRestController {
             @RequestBody CashCard cardUpdate,
             Principal principal
     ) {
-        if (cardRepository.existsByIdAndOwner(requestedID, principal.getName())) {
-            cardRepository.save(new CashCard(requestedID, cardUpdate.amount(), principal.getName()));
+        if (cardRepository.findByIdAndOwnerAndActiveIsTrue(requestedID, principal.getName()) != null) {
+            cardRepository.save(new CashCard(requestedID, cardUpdate.amount(), principal.getName(), true));
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
@@ -75,8 +76,9 @@ public class CashCardRestController {
 
     @DeleteMapping("/{id}")
     private ResponseEntity<Void> deleteCashCard(@PathVariable Long id, Principal principal) {
-        if (cardRepository.existsByIdAndOwner(id, principal.getName())) {
-            cardRepository.deleteById(id);
+        CashCard card = cardRepository.findByIdAndOwner(id, principal.getName());
+        if (card != null) {
+            cardRepository.save(new CashCard(card.id(), card.amount(), principal.getName(), false));
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

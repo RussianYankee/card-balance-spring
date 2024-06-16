@@ -53,7 +53,7 @@ class CashCardApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateANewCashCard() {
-        CashCard newCashCard = new CashCard(null, 250.00, null);
+        CashCard newCashCard = new CashCard(null, 250.00, null, true);
         ResponseEntity<Void> createResponse = restTemplate
                 .withBasicAuth("sarah1", "abc123")
                 .postForEntity("/cashcards", newCashCard, Void.class);
@@ -151,7 +151,7 @@ class CashCardApplicationTests {
     @Test
     @DirtiesContext
     void shouldUpdateAnExistingCashCard() {
-        CashCard cashCardUpdate = new CashCard(null, 19.99, null);
+        CashCard cashCardUpdate = new CashCard(null, 19.99, null, true);
         HttpEntity<CashCard> request = new HttpEntity<>(cashCardUpdate);
         ResponseEntity<Void> response = restTemplate
                 .withBasicAuth("sarah1", "abc123")
@@ -171,7 +171,7 @@ class CashCardApplicationTests {
 
     @Test
     void shouldNotUpdateACashCardThatDoesNotExist() {
-        CashCard unknownCard = new CashCard(null, 19.99, null);
+        CashCard unknownCard = new CashCard(null, 19.99, null, true);
         HttpEntity<CashCard> request = new HttpEntity<>(unknownCard);
         ResponseEntity<Void> response = restTemplate
                 .withBasicAuth("sarah1", "abc123")
@@ -181,7 +181,7 @@ class CashCardApplicationTests {
 
     @Test
     void shouldNotUpdateACashCardThatIsOwnedBySomeoneElse() {
-        CashCard johnsCard = new CashCard(null, 333.33, null);
+        CashCard johnsCard = new CashCard(null, 333.33, null, true);
         HttpEntity<CashCard> request = new HttpEntity<>(johnsCard);
         ResponseEntity<Void> response = restTemplate
                 .withBasicAuth("sarah1", "abc123")
