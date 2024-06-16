@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -27,8 +28,10 @@ public class CashCardRestController {
     }
 
     @GetMapping("/{requestedID}")
-    private ResponseEntity<CashCard> findById(@PathVariable Long requestedID) {
-        Optional<CashCard> optCard = cardRepository.findById(requestedID);
+    private ResponseEntity<CashCard> findById(@PathVariable Long requestedID, Principal principal) {
+        Optional<CashCard> optCard = Optional.ofNullable(
+                cardRepository.findByIdAndOwner(requestedID, principal.getName())
+        );
         if (optCard.isPresent()) {
             return ResponseEntity.ok(optCard.get());
         } else {
@@ -48,8 +51,8 @@ public class CashCardRestController {
     }
 
     @GetMapping
-    private ResponseEntity<Iterable<CashCard>> findAll(Pageable pageable) {
-        Page<CashCard> page = cardRepository.findAll(
+    private ResponseEntity<Iterable<CashCard>> findAll(Pageable pageable, Principal principal) {
+        Page<CashCard> page = cardRepository.findByOwner(principal.getName(),
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize()
