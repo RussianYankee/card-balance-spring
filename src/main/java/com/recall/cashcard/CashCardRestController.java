@@ -5,12 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -29,14 +24,11 @@ public class CashCardRestController {
 
     @GetMapping("/{requestedID}")
     private ResponseEntity<CashCard> findById(@PathVariable Long requestedID, Principal principal) {
-        Optional<CashCard> optCard = Optional.ofNullable(
-                cardRepository.findByIdAndOwner(requestedID, principal.getName())
-        );
-        if (optCard.isPresent()) {
-            return ResponseEntity.ok(optCard.get());
-        } else {
-            return ResponseEntity.notFound().build();
+        CashCard card = cardRepository.findByIdAndOwner(requestedID, principal.getName());
+        if (card != null) {
+            return ResponseEntity.ok(card);
         }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
@@ -68,4 +60,16 @@ public class CashCardRestController {
         return ResponseEntity.ok(page.getContent());
     }
 
+    @PutMapping("/{requestedID}")
+    private ResponseEntity<Void> putCashCard(
+            @PathVariable Long requestedID,
+            @RequestBody CashCard cardUpdate,
+            Principal principal
+    ) {
+        if (cardRepository.existsByIdAndOwner(requestedID, principal.getName())) {
+            cardRepository.save(new CashCard(requestedID, cardUpdate.amount(), principal.getName()));
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
