@@ -1,5 +1,6 @@
-package com.recall.cashcard;
+package com.recall.cashcard.repository;
 
+import com.recall.cashcard.model.CashCard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.CrudRepository;

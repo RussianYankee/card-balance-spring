@@ -1,16 +1,16 @@
-package com.recall.cashcard;
+package com.recall.cashcard.rest;
 
+import com.recall.cashcard.model.CashCard;
+import com.recall.cashcard.repository.CashCardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cashcards")

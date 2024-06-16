@@ -1,4 +1,4 @@
-package com.recall.cashcard;
+package com.recall.cashcard.model;
 
 import org.springframework.data.annotation.Id;
 
