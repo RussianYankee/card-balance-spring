@@ -115,4 +115,17 @@ class CashCardApplicationTests {
         double amount = documentContext.read("$[0].amount");
         assertThat(amount).isEqualTo(123.45);
     }
+
+    @Test
+    void shouldNotReturnACashCardWhenUsingBadCredentials() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("BAD-USER", "abc123")
+                .getForEntity("/cashcards/99", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        response = restTemplate
+                .withBasicAuth("sarah1", "BAD-PASSWORD")
+                .getForEntity("/cashcards/99", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
 }
